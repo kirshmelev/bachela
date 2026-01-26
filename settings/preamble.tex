@@ -18,6 +18,7 @@ times % use Times font as main
 \usepackage{array} % расширенные возможности для работы с таблицами
 \usepackage{tabularx} % автоматический подбор ширины столбцов
 \usepackage{dcolumn} % выравнивание чисел по разделителю
+\usepackage{longtable}
 
 % Математика
 \usepackage{bm} % полужирное начертание для математических символов
@@ -45,6 +46,9 @@ times % use Times font as main
 % Создание нового типа столбца для выравнивания содержимого по центру
 \newcommand{\PreserveBackslash}[1]{\let\temp=\\#1\let\\=\temp}
 \newcolumntype{C}[1]{>{\PreserveBackslash\centering}p{#1}}
+% Читаемые текстовые колонки для таблиц (без выравнивания по ширине)
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}} % фиксированная ширина, переносы, левое выравнивание
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}        % "резиновая" ширина как X, но тоже левое выравнивание
 
 % Настройка стиля страницы
 \pagestyle{fancy}      % Использование стиля "fancy" для оформления страниц
@@ -54,6 +58,10 @@ times % use Times font as main
 
 % Настройка подписей к изображениям и таблицам
 \captionsetup{format=hang,labelsep=period}
+\captionsetup[table]{
+  justification=raggedright,
+singlelinecheck=false
+}
 
 % Использование полужирного начертания для векторов
 \let\vec=\mathbf
