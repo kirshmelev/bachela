@@ -19,6 +19,7 @@ times % use Times font as main
 \usepackage{pdfpages} % вставка pdf-страниц
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta, positioning}
+\usepackage{float} % поддержка [H] для figure и table
 
 % Таблицы
 \usepackage{array} % расширенные возможности для работы с таблицами
@@ -66,7 +67,7 @@ times % use Times font as main
 \captionsetup{format=hang,labelsep=period}
 \captionsetup[table]{
   justification=raggedright,
-singlelinecheck=false
+  singlelinecheck=false
 }
 
 % Использование полужирного начертания для векторов
