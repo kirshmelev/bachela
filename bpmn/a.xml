@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+    xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+    xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+    xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+    id="Definitions_MainProcess_DigitalAssets"
+    targetNamespace="http://example.com/bpmn/digital-assets/main-process">
+
+  <bpmn:process id="Process_Main_DigitalAssets"
+                name="Основной процесс управления цифровыми активами граждан"
+                isExecutable="false">
+
+    <bpmn:laneSet id="LaneSet_Main">
+      <bpmn:lane id="Lane_Citizen" name="Гражданин">
+        <bpmn:flowNodeRef>StartEvent_Lifecycle</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_IdentifyCitizen</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_CreateRegistry</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_ClassifyAssets</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_RecordDisposition</bpmn:flowNodeRef>
+      </bpmn:lane>
+
+      <bpmn:lane id="Lane_GIS" name="ГИС управления цифровыми активами">
+        <bpmn:flowNodeRef>Event_TriggerConfirmed</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_VerifyTrigger</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_HeirsExist</bpmn:flowNodeRef>
+
+        <bpmn:flowNodeRef>Task_ApplyAccessRules</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_NotifyInterestedParties</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_AccessGranted</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_DiscloseAllowedInfo</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_LimitedDisclosure</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_ArchiveHeirsResult</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_HeirsDone</bpmn:flowNodeRef>
+
+        <bpmn:flowNodeRef>Task_ClassifyEscheat</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_PrepareStatePackage</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_ArchiveStateTransfer</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_StateDone</bpmn:flowNodeRef>
+      </bpmn:lane>
+
+      <bpmn:lane id="Lane_Notary" name="Нотариус / государственные реестры">
+        <bpmn:flowNodeRef>Task_RequestInheritanceCase</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_CheckHeirsStatus</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_VerifyLegalGrounds</bpmn:flowNodeRef>
+      </bpmn:lane>
+
+      <bpmn:lane id="Lane_Heir" name="Наследник / доверенное лицо">
+        <bpmn:flowNodeRef>Task_RequestAccess</bpmn:flowNodeRef>
+      </bpmn:lane>
+
+      <bpmn:lane id="Lane_State" name="Уполномоченный орган по выморочному имуществу">
+        <bpmn:flowNodeRef>Task_ReceiveStatePackage</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_ConfirmStateAcceptance</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+
+    <bpmn:startEvent id="StartEvent_Lifecycle" name="Начало жизненного цикла управления активами">
+      <bpmn:outgoing>Flow_01</bpmn:outgoing>
+    </bpmn:startEvent>
+
+    <bpmn:userTask id="Task_IdentifyCitizen" name="Идентификация гражданина и создание профиля">
+      <bpmn:incoming>Flow_01</bpmn:incoming>
+      <bpmn:outgoing>Flow_02</bpmn:outgoing>
+    </bpmn:userTask>
+
+    <bpmn:userTask id="Task_CreateRegistry" name="Создание реестра цифровых активов">
+      <bpmn:incoming>Flow_02</bpmn:incoming>
+      <bpmn:outgoing>Flow_03</bpmn:outgoing>
+    </bpmn:userTask>
+
+    <bpmn:userTask id="Task_ClassifyAssets" name="Добавление и классификация активов">
+      <bpmn:incoming>Flow_03</bpmn:incoming>
+      <bpmn:outgoing>Flow_04</bpmn:outgoing>
+    </bpmn:userTask>
+
+    <bpmn:userTask id="Task_RecordDisposition" name="Фиксация распоряжений и правил доступа">
+      <bpmn:incoming>Flow_04</bpmn:incoming>
+      <bpmn:outgoing>Flow_05</bpmn:outgoing>
+    </bpmn:userTask>
+
+    <bpmn:intermediateCatchEvent id="Event_TriggerConfirmed" name="Подтверждено триггерное событие">
+      <bpmn:incoming>Flow_05</bpmn:incoming>
+      <bpmn:outgoing>Flow_06</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_Trigger"/>
+    </bpmn:intermediateCatchEvent>
+
+    <bpmn:serviceTask id="Task_VerifyTrigger" name="Проверка юридически значимого события">
+      <bpmn:incoming>Flow_06</bpmn:incoming>
+      <bpmn:outgoing>Flow_07</bpmn:outgoing>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_RequestInheritanceCase" name="Запрос сведений о наследственном деле">
+      <bpmn:incoming>Flow_07</bpmn:incoming>
+      <bpmn:outgoing>Flow_08</bpmn:outgoing>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_CheckHeirsStatus" name="Проверка состава и статуса наследников">
+      <bpmn:incoming>Flow_08</bpmn:incoming>
+      <bpmn:outgoing>Flow_09</bpmn:outgoing>
+    </bpmn:serviceTask>
+
+    <bpmn:exclusiveGateway id="Gateway_HeirsExist" name="Есть наследники или доверенные лица?">
+      <bpmn:incoming>Flow_09</bpmn:incoming>
+      <bpmn:outgoing>Flow_10</bpmn:outgoing>
+      <bpmn:outgoing>Flow_19</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <bpmn:serviceTask id="Task_ApplyAccessRules" name="Применение правил доступа и воли владельца">
+      <bpmn:incoming>Flow_10</bpmn:incoming>
+      <bpmn:outgoing>Flow_11</bpmn:outgoing>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_NotifyInterestedParties" name="Уведомление заинтересованных лиц">
+      <bpmn:incoming>Flow_11</bpmn:incoming>
+      <bpmn:outgoing>Flow_12</bpmn:outgoing>
+    </bpmn:serviceTask>
+
+    <bpmn:userTask id="Task_RequestAccess" name="Обращение за доступом">
+      <bpmn:incoming>Flow_12</bpmn:incoming>
+      <bpmn:outgoing>Flow_13</bpmn:outgoing>
+    </bpmn:userTask>
+
+    <bpmn:userTask id="Task_VerifyLegalGrounds" name="Проверка правового основания доступа">
+      <bpmn:incoming>Flow_13</bpmn:incoming>
+      <bpmn:outgoing>Flow_14</bpmn:outgoing>
+    </bpmn:userTask>
+
+    <bpmn:exclusiveGateway id="Gateway_AccessGranted" name="Доступ разрешён?">
+      <bpmn:incoming>Flow_14</bpmn:incoming>
+      <bpmn:outgoing>Flow_15</bpmn:outgoing>
+      <bpmn:outgoing>Flow_17</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <bpmn:serviceTask id="Task_DiscloseAllowedInfo" name="Раскрытие допустимого объёма сведений">
+      <bpmn:incoming>Flow_15</bpmn:incoming>
+      <bpmn:outgoing>Flow_16</bpmn:outgoing>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_LimitedDisclosure" name="Ограниченное раскрытие или отказ в доступе">
+      <bpmn:incoming>Flow_17</bpmn:incoming>
+      <bpmn:outgoing>Flow_18</bpmn:outgoing>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_ArchiveHeirsResult" name="Журналирование и архивирование результата">
+      <bpmn:incoming>Flow_16</bpmn:incoming>
+      <bpmn:incoming>Flow_18</bpmn:incoming>
+      <bpmn:outgoing>Flow_21</bpmn:outgoing>
+    </bpmn:serviceTask>
+
+    <bpmn:endEvent id="EndEvent_HeirsDone" name="Сценарий с наследниками завершён">
+      <bpmn:incoming>Flow_21</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <bpmn:serviceTask id="Task_ClassifyEscheat" name="Классификация активов как потенциально выморочных">
+      <bpmn:incoming>Flow_19</bpmn:incoming>
+      <bpmn:outgoing>Flow_20</bpmn:outgoing>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_PrepareStatePackage" name="Подготовка пакета сведений для государства">
+      <bpmn:incoming>Flow_20</bpmn:incoming>
+      <bpmn:outgoing>Flow_22</bpmn:outgoing>
+    </bpmn:serviceTask>
+
+    <bpmn:userTask id="Task_ReceiveStatePackage" name="Получение сведений об активах и проверка">
+      <bpmn:incoming>Flow_22</bpmn:incoming>
+      <bpmn:outgoing>Flow_23</bpmn:outgoing>
+    </bpmn:userTask>
+
+    <bpmn:userTask id="Task_ConfirmStateAcceptance" name="Подтверждение принятия в публично-правовой контур">
+      <bpmn:incoming>Flow_23</bpmn:incoming>
+      <bpmn:outgoing>Flow_24</bpmn:outgoing>
+    </bpmn:userTask>
+
+    <bpmn:serviceTask id="Task_ArchiveStateTransfer" name="Журналирование и архивирование передачи государству">
+      <bpmn:incoming>Flow_24</bpmn:incoming>
+      <bpmn:outgoing>Flow_25</bpmn:outgoing>
+    </bpmn:serviceTask>
+
+    <bpmn:endEvent id="EndEvent_StateDone" name="Сценарий выморочного имущества завершён">
+      <bpmn:incoming>Flow_25</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <bpmn:sequenceFlow id="Flow_01" sourceRef="StartEvent_Lifecycle" targetRef="Task_IdentifyCitizen"/>
+    <bpmn:sequenceFlow id="Flow_02" sourceRef="Task_IdentifyCitizen" targetRef="Task_CreateRegistry"/>
+    <bpmn:sequenceFlow id="Flow_03" sourceRef="Task_CreateRegistry" targetRef="Task_ClassifyAssets"/>
+    <bpmn:sequenceFlow id="Flow_04" sourceRef="Task_ClassifyAssets" targetRef="Task_RecordDisposition"/>
+    <bpmn:sequenceFlow id="Flow_05" sourceRef="Task_RecordDisposition" targetRef="Event_TriggerConfirmed"/>
+    <bpmn:sequenceFlow id="Flow_06" sourceRef="Event_TriggerConfirmed" targetRef="Task_VerifyTrigger"/>
+    <bpmn:sequenceFlow id="Flow_07" sourceRef="Task_VerifyTrigger" targetRef="Task_RequestInheritanceCase"/>
+    <bpmn:sequenceFlow id="Flow_08" sourceRef="Task_RequestInheritanceCase" targetRef="Task_CheckHeirsStatus"/>
+    <bpmn:sequenceFlow id="Flow_09" sourceRef="Task_CheckHeirsStatus" targetRef="Gateway_HeirsExist"/>
+
+    <bpmn:sequenceFlow id="Flow_10" name="Да" sourceRef="Gateway_HeirsExist" targetRef="Task_ApplyAccessRules"/>
+    <bpmn:sequenceFlow id="Flow_11" sourceRef="Task_ApplyAccessRules" targetRef="Task_NotifyInterestedParties"/>
+    <bpmn:sequenceFlow id="Flow_12" sourceRef="Task_NotifyInterestedParties" targetRef="Task_RequestAccess"/>
+    <bpmn:sequenceFlow id="Flow_13" sourceRef="Task_RequestAccess" targetRef="Task_VerifyLegalGrounds"/>
+    <bpmn:sequenceFlow id="Flow_14" sourceRef="Task_VerifyLegalGrounds" targetRef="Gateway_AccessGranted"/>
+    <bpmn:sequenceFlow id="Flow_15" name="Да" sourceRef="Gateway_AccessGranted" targetRef="Task_DiscloseAllowedInfo"/>
+    <bpmn:sequenceFlow id="Flow_16" sourceRef="Task_DiscloseAllowedInfo" targetRef="Task_ArchiveHeirsResult"/>
+    <bpmn:sequenceFlow id="Flow_17" name="Нет" sourceRef="Gateway_AccessGranted" targetRef="Task_LimitedDisclosure"/>
+    <bpmn:sequenceFlow id="Flow_18" sourceRef="Task_LimitedDisclosure" targetRef="Task_ArchiveHeirsResult"/>
+    <bpmn:sequenceFlow id="Flow_21" sourceRef="Task_ArchiveHeirsResult" targetRef="EndEvent_HeirsDone"/>
+
+    <bpmn:sequenceFlow id="Flow_19" name="Нет" sourceRef="Gateway_HeirsExist" targetRef="Task_ClassifyEscheat"/>
+    <bpmn:sequenceFlow id="Flow_20" sourceRef="Task_ClassifyEscheat" targetRef="Task_PrepareStatePackage"/>
+    <bpmn:sequenceFlow id="Flow_22" sourceRef="Task_PrepareStatePackage" targetRef="Task_ReceiveStatePackage"/>
+    <bpmn:sequenceFlow id="Flow_23" sourceRef="Task_ReceiveStatePackage" targetRef="Task_ConfirmStateAcceptance"/>
+    <bpmn:sequenceFlow id="Flow_24" sourceRef="Task_ConfirmStateAcceptance" targetRef="Task_ArchiveStateTransfer"/>
+    <bpmn:sequenceFlow id="Flow_25" sourceRef="Task_ArchiveStateTransfer" targetRef="EndEvent_StateDone"/>
+
+  </bpmn:process>
+
+  <bpmndi:BPMNDiagram id="BPMNDiagram_Main">
+    <bpmndi:BPMNPlane id="BPMNPlane_Main" bpmnElement="Process_Main_DigitalAssets">
+
+      <bpmndi:BPMNShape id="Lane_Citizen_di" bpmnElement="Lane_Citizen" isHorizontal="true">
+        <dc:Bounds x="100" y="80" width="3900" height="120"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_GIS_di" bpmnElement="Lane_GIS" isHorizontal="true">
+        <dc:Bounds x="100" y="200" width="3900" height="220"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Notary_di" bpmnElement="Lane_Notary" isHorizontal="true">
+        <dc:Bounds x="100" y="420" width="3900" height="120"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Heir_di" bpmnElement="Lane_Heir" isHorizontal="true">
+        <dc:Bounds x="100" y="540" width="3900" height="120"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_State_di" bpmnElement="Lane_State" isHorizontal="true">
+        <dc:Bounds x="100" y="660" width="3900" height="120"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="StartEvent_Lifecycle_di" bpmnElement="StartEvent_Lifecycle">
+        <dc:Bounds x="160" y="122" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_IdentifyCitizen_di" bpmnElement="Task_IdentifyCitizen">
+        <dc:Bounds x="240" y="100" width="170" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_CreateRegistry_di" bpmnElement="Task_CreateRegistry">
+        <dc:Bounds x="500" y="100" width="170" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ClassifyAssets_di" bpmnElement="Task_ClassifyAssets">
+        <dc:Bounds x="760" y="100" width="180" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_RecordDisposition_di" bpmnElement="Task_RecordDisposition">
+        <dc:Bounds x="1030" y="100" width="190" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Event_TriggerConfirmed_di" bpmnElement="Event_TriggerConfirmed">
+        <dc:Bounds x="1300" y="282" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_VerifyTrigger_di" bpmnElement="Task_VerifyTrigger">
+        <dc:Bounds x="1390" y="260" width="180" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_RequestInheritanceCase_di" bpmnElement="Task_RequestInheritanceCase">
+        <dc:Bounds x="1610" y="440" width="190" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_CheckHeirsStatus_di" bpmnElement="Task_CheckHeirsStatus">
+        <dc:Bounds x="1840" y="440" width="190" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_HeirsExist_di" bpmnElement="Gateway_HeirsExist" isMarkerVisible="true">
+        <dc:Bounds x="2080" y="275" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Task_ClassifyEscheat_di" bpmnElement="Task_ClassifyEscheat">
+        <dc:Bounds x="2200" y="220" width="210" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_PrepareStatePackage_di" bpmnElement="Task_PrepareStatePackage">
+        <dc:Bounds x="2460" y="220" width="210" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ReceiveStatePackage_di" bpmnElement="Task_ReceiveStatePackage">
+        <dc:Bounds x="2720" y="680" width="210" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ConfirmStateAcceptance_di" bpmnElement="Task_ConfirmStateAcceptance">
+        <dc:Bounds x="2980" y="680" width="210" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ArchiveStateTransfer_di" bpmnElement="Task_ArchiveStateTransfer">
+        <dc:Bounds x="3240" y="220" width="210" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_StateDone_di" bpmnElement="EndEvent_StateDone">
+        <dc:Bounds x="3500" y="242" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Task_ApplyAccessRules_di" bpmnElement="Task_ApplyAccessRules">
+        <dc:Bounds x="2200" y="320" width="210" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_NotifyInterestedParties_di" bpmnElement="Task_NotifyInterestedParties">
+        <dc:Bounds x="2460" y="320" width="210" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_RequestAccess_di" bpmnElement="Task_RequestAccess">
+        <dc:Bounds x="2720" y="560" width="190" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_VerifyLegalGrounds_di" bpmnElement="Task_VerifyLegalGrounds">
+        <dc:Bounds x="2980" y="440" width="210" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_AccessGranted_di" bpmnElement="Gateway_AccessGranted" isMarkerVisible="true">
+        <dc:Bounds x="3240" y="335" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_DiscloseAllowedInfo_di" bpmnElement="Task_DiscloseAllowedInfo">
+        <dc:Bounds x="3360" y="300" width="210" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_LimitedDisclosure_di" bpmnElement="Task_LimitedDisclosure">
+        <dc:Bounds x="3360" y="380" width="210" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ArchiveHeirsResult_di" bpmnElement="Task_ArchiveHeirsResult">
+        <dc:Bounds x="3620" y="320" width="210" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_HeirsDone_di" bpmnElement="EndEvent_HeirsDone">
+        <dc:Bounds x="3880" y="342" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNEdge id="Flow_01_di" bpmnElement="Flow_01">
+        <di:waypoint x="196" y="140"/>
+        <di:waypoint x="240" y="140"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_02_di" bpmnElement="Flow_02">
+        <di:waypoint x="410" y="140"/>
+        <di:waypoint x="500" y="140"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_03_di" bpmnElement="Flow_03">
+        <di:waypoint x="670" y="140"/>
+        <di:waypoint x="760" y="140"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_04_di" bpmnElement="Flow_04">
+        <di:waypoint x="940" y="140"/>
+        <di:waypoint x="1030" y="140"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_05_di" bpmnElement="Flow_05">
+        <di:waypoint x="1220" y="140"/>
+        <di:waypoint x="1318" y="140"/>
+        <di:waypoint x="1318" y="282"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_06_di" bpmnElement="Flow_06">
+        <di:waypoint x="1336" y="300"/>
+        <di:waypoint x="1390" y="300"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_07_di" bpmnElement="Flow_07">
+        <di:waypoint x="1570" y="300"/>
+        <di:waypoint x="1705" y="300"/>
+        <di:waypoint x="1705" y="440"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_08_di" bpmnElement="Flow_08">
+        <di:waypoint x="1800" y="480"/>
+        <di:waypoint x="1840" y="480"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_09_di" bpmnElement="Flow_09">
+        <di:waypoint x="2030" y="480"/>
+        <di:waypoint x="2105" y="480"/>
+        <di:waypoint x="2105" y="325"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Flow_10_di" bpmnElement="Flow_10">
+        <di:waypoint x="2130" y="325"/>
+        <di:waypoint x="2200" y="360"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_11_di" bpmnElement="Flow_11">
+        <di:waypoint x="2410" y="360"/>
+        <di:waypoint x="2460" y="360"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12_di" bpmnElement="Flow_12">
+        <di:waypoint x="2670" y="360"/>
+        <di:waypoint x="2815" y="360"/>
+        <di:waypoint x="2815" y="560"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_13_di" bpmnElement="Flow_13">
+        <di:waypoint x="2910" y="600"/>
+        <di:waypoint x="3085" y="600"/>
+        <di:waypoint x="3085" y="440"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_14_di" bpmnElement="Flow_14">
+        <di:waypoint x="3190" y="480"/>
+        <di:waypoint x="3265" y="480"/>
+        <di:waypoint x="3265" y="385"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_15_di" bpmnElement="Flow_15">
+        <di:waypoint x="3290" y="360"/>
+        <di:waypoint x="3360" y="340"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_16_di" bpmnElement="Flow_16">
+        <di:waypoint x="3570" y="340"/>
+        <di:waypoint x="3620" y="360"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_17_di" bpmnElement="Flow_17">
+        <di:waypoint x="3265" y="385"/>
+        <di:waypoint x="3360" y="420"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_18_di" bpmnElement="Flow_18">
+        <di:waypoint x="3570" y="420"/>
+        <di:waypoint x="3620" y="360"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_21_di" bpmnElement="Flow_21">
+        <di:waypoint x="3830" y="360"/>
+        <di:waypoint x="3880" y="360"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Flow_19_di" bpmnElement="Flow_19">
+        <di:waypoint x="2105" y="275"/>
+        <di:waypoint x="2105" y="260"/>
+        <di:waypoint x="2200" y="260"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_20_di" bpmnElement="Flow_20">
+        <di:waypoint x="2410" y="260"/>
+        <di:waypoint x="2460" y="260"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_22_di" bpmnElement="Flow_22">
+        <di:waypoint x="2670" y="260"/>
+        <di:waypoint x="2825" y="260"/>
+        <di:waypoint x="2825" y="680"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_23_di" bpmnElement="Flow_23">
+        <di:waypoint x="2930" y="720"/>
+        <di:waypoint x="2980" y="720"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_24_di" bpmnElement="Flow_24">
+        <di:waypoint x="3190" y="720"/>
+        <di:waypoint x="3345" y="720"/>
+        <di:waypoint x="3345" y="260"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_25_di" bpmnElement="Flow_25">
+        <di:waypoint x="3450" y="260"/>
+        <di:waypoint x="3500" y="260"/>
+      </bpmndi:BPMNEdge>
+
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
