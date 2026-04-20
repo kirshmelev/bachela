@@ -20,10 +20,10 @@ jobs:
       - name: Rename release files
         shell: bash
         run: |
-          find . -maxdepth 1 -name '*.tex' -exec bash -c 'mv "${0%.tex}.pdf" "${0%.tex}-${GITHUB_REF#refs/*/}.pdf"' {} \;
+          find . -maxdepth 1 -name '*.tex' -exec bash -c 'mv "${0%.tex}.pdf" "${0%.tex}-release.pdf"' {} \;
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            *-v*.pdf
+            *-release*.pdf
