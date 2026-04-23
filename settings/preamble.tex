@@ -4,10 +4,6 @@ subf, % use and configure subfig package for nested figure numbering
 times % use Times font as main
 ]{disser}
 
-\makeatletter
-\typeout{BASE FONT SIZE = \f@size pt}
-\makeatother
-
 % Кодировка и язык
 \usepackage[T2A]{fontenc} % поддержка кириллицы
 \usepackage[utf8]{inputenc} % кодировка исходного текста
@@ -47,9 +43,24 @@ times % use Times font as main
 \usepackage{fancyhdr} % установка колонтитулов
 \usepackage{listings} % поддержка вставки исходного кода
 \usepackage{pdflscape}
+\usepackage{enumitem}
 
 % Установка шрифта Times New Roman
 \renewcommand{\rmdefault}{ftm}
+
+% Приведение основного текста к 14 pt при полуторном интервале
+\makeatletter
+\renewcommand\normalsize{%
+  \@setfontsize\normalsize{14pt}{21pt}%
+  \abovedisplayskip 12pt plus 3pt minus 7pt%
+  \abovedisplayshortskip \z@ plus 3pt%
+  \belowdisplayshortskip 7pt plus 3pt minus 4pt%
+  \belowdisplayskip \abovedisplayskip
+  \let\@listi\@listI
+}
+\normalsize
+\typeout{BASE FONT SIZE = \f@size pt}
+\makeatother
 
 % Создание нового типа столбца для выравнивания содержимого по центру
 \newcommand{\PreserveBackslash}[1]{\let\temp=\\#1\let\\=\temp}
