@@ -14,7 +14,7 @@ times % use Times font as main
 \usepackage{graphicx} % подключение графики
 \usepackage{pdfpages} % вставка pdf-страниц
 \usepackage{tikz}
-\usetikzlibrary{arrows.meta, positioning}
+\usetikzlibrary{arrows.meta, positioning, fit}
 \usepackage{float} % поддержка [H] для figure и table
 
 % Таблицы
@@ -31,7 +31,7 @@ times % use Times font as main
 % Библиография и ссылки
 \usepackage{cite} % поддержка цитирования
 \usepackage{xurl}
-\usepackage[unicode]{hyperref} % создание гиперссылок
+\usepackage[unicode,hidelinks]{hyperref} % создание гиперссылок без видимых рамок
 
 % Прочее
 \usepackage{color} % работа с цветом
@@ -61,6 +61,7 @@ times % use Times font as main
 \normalsize
 \typeout{BASE FONT SIZE = \f@size pt}
 \makeatother
+\setlength{\emergencystretch}{3em}
 
 % Создание нового типа столбца для выравнивания содержимого по центру
 \newcommand{\PreserveBackslash}[1]{\let\temp=\\#1\let\\=\temp}
