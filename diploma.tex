@@ -3,6 +3,13 @@
 
 \begin{document}
 
+% Задаёт порядок библиографического списка по группам из методички:
+% нормативные акты, периодические издания, электронные ресурсы, иностранные источники.
+\nocite{constitutionRu,federalLaw152FZ_2006,federalLaw259FZ_2020,notariatLawArticle31}
+\nocite{Orlov2024Moluch,Haritonova2024HSE}
+\nocite{fnpOfficialAbout,HSEInternetInfrastructurePandemic2021,HSETelecomInfrastructure2022,TAdviserInternetTrafficRussia2026,cniNotariat2024Stats,rosimushchestvo2025Escheat,bankRussia2024HouseholdFunds,moex2024RetailInvestors,bankRussia2024CFAReview,bankRussia2025CFAReview,bankRussia2025CryptoFlows,akitEcommerceRussia2025,habrCareerSalariesH2_2025,fnsInsuranceRates2026,pravoRu2024EscheatMoscow}
+\nocite{Edwards2013PostMortemPrivacy,Harbinja2022DigitalDeath,gdprReg2016_679,FrenchDigitalInheritanceLaw2016,bghIIIzr18317_2018,RUFADAA2015,googleInactiveAccountManager,facebookLegacyContact,appleLegacyContact,nist80063_4_2025,iso27001_2022,nist80053r5_2020,enisaThreatLandscape2023,iso14721_2025,iso16363_2025,iso19005_4_2020,nist80030r1_2012,owaspASVS403}
+
 % Включение титульного листа (первая страница файла Title.pdf)
 \includepdf[pages={1-1}]{extra/Title.pdf}
 
@@ -13,6 +20,7 @@
 \input{chapters/chapter_1.tex}
 \input{chapters/chapter_2.tex}
 \input{chapters/chapter_3.tex}
+\clearpage
 
 % Заключение
 \input{chapters/conclusion.tex}
@@ -22,6 +30,7 @@
 
 % Приложение (может быть пустым)
 \input{chapters/appendix.tex}
+\clearpage
 
 % Лист подписи
 \includepdf[pages={1-1}]{extra/last.pdf}

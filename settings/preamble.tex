@@ -78,9 +78,16 @@ times % use Times font as main
 
 % Настройка подписей к изображениям и таблицам
 \captionsetup{format=hang,labelsep=period}
-\captionsetup[table]{
-  justification=raggedright,
-  singlelinecheck=false
+% Методичка требует номер раздела без точки после номера: "2.3 Название".
+\makeatletter
+\renewcommand{\@seccntformat}[1]{\csname the#1\endcsname\quad}
+\makeatother
+
+\newcommand{\vkrsection}[1]{%
+  \refstepcounter{section}%
+  \phantomsection%
+  \addcontentsline{toc}{section}{\protect\numberline{\thesection}#1}%
+  \par\bigskip\noindent\textbf{\thesection\quad #1}\par\nobreak\medskip%
 }
 
 % Использование полужирного начертания для векторов
